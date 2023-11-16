@@ -10,9 +10,9 @@ python -m venv venv
 ```powershell
 Set-ExecutionPolicy RemoteSigned
 ```
-3. installing requirement.txt
+3. installing requirements.txt
 ```cmd
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 4. running app
