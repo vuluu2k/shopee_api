@@ -50,7 +50,9 @@ class Profile(AbstractUser):
         verbose_name='user permissions',
         help_text='Specific permissions for this user.',
     )
-    credit_card = models.OneToOneField(CreditCard, on_delete=models.CASCADE, null=True, blank=True)
-    bank_account = models.OneToOneField(BankAccount, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.username
+class UserBankRelation(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    credit_card = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True, blank=True)
+    bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, null=True, blank=True)
