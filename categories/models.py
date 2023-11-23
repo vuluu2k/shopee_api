@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class Main_category(models.Model):
+class MainCategory(models.Model):
     name = models.TextField(primary_key=True, default="")
     image = models.TextField(default="")
 

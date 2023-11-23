@@ -19,3 +19,10 @@ pip install -r requirements.txt
 ```cmd
 python manage.py runserver
 ```
+
+
+## Tricks Tips
+
+### Fix generic migrations in uuid is primary key
+    * not call function uuid4()
+    * use uuid4 with primary key, it's autocrement key

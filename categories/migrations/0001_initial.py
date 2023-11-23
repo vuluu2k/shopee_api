@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Main_category',
+            name='MainCategory',
             fields=[
                 ('name', models.TextField(default='', primary_key=True, serialize=False)),
                 ('image', models.TextField(default='')),

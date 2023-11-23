@@ -7,22 +7,22 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0001_initial'),
+        ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='feedback',
+            model_name='bankaccount',
             name='id',
             field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='product',
+            model_name='creditcard',
             name='id',
             field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='variation',
+            model_name='profile',
             name='id',
             field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
         ),
