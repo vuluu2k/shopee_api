@@ -26,3 +26,7 @@ python manage.py runserver
 ### Fix generic migrations in uuid is primary key
     * not call function uuid4()
     * use uuid4 with primary key, it's autocrement key
+### Get params with django framework
+    * in path call params (arg function)
+    * form post call body or form data (request.data)
+    * after ? call query (request.GET)

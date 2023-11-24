@@ -11,6 +11,8 @@ class Profile(AbstractUser):
     gender = models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     REQUIRED_FIELDS = []
     def __str__(self):
@@ -23,6 +25,8 @@ class CreditCard(models.Model):
     fullname = models.CharField(max_length=100, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     postal_code = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -36,6 +40,8 @@ class BankAccount(models.Model):
     name_branch = models.CharField(max_length=100, null=True, blank=True)
     number = models.CharField(max_length=20, null=True, blank=True)
     unsigned_fullname = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self): 
