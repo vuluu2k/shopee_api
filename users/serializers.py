@@ -1,13 +1,20 @@
-from .models import Profile
+from .models import User, BankCard
 from rest_framework import serializers
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class BankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankCard
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    banks = BankSerializer(many=True, read_only=True)
 
     def validate_password(self, value):
         if value.isalnum():
             raise serializers.ValidationError(
-                'password must have atleast one special character.')
+                'password must have at least one special character.')
         return value
 
     # def validate(self, data):
@@ -20,8 +27,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     #     return super().to_internal_value(user_data)
 
     class Meta:
-        model = Profile
-        exclude = ['password']
+        model = User
+        fields = ['id', 'username', 'first_name',
+                  'last_name', 'email', 'avatar', 'banks']
         extra_kwargs = {
             'password': {'write_only': True}
         }

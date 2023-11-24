@@ -1,17 +1,33 @@
 from rest_framework import permissions
 from rest_framework import viewsets
 
-from .models import Profile
-from .serializers import ProfileSerializer
+from .models import User, BankCard
+from .serializers import UserSerializer, BankSerializer
+
+
+class BankViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+
+    queryset = BankCard.objects.all()
+    serializer_class = BankSerializer
+
+
+class BankDetailViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+
+    queryset = BankCard.objects.all()
+    serializer_class = BankSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes=[permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
 
-    queryset = Profile.objects.all().order_by('-created_at')
-    serializer_class = ProfileSerializer
-    
+    queryset = User.objects.all().order_by('-created_at')
+    serializer_class = UserSerializer
+
+
 class UserDetailViewSet(viewsets.ModelViewSet):
-    permission_classes=[permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
 
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
