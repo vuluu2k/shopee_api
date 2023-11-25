@@ -9,7 +9,7 @@ class BankSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    banks = BankSerializer(many=True, read_only=True)
+    banks = serializers.SerializerMethodField()
 
     def validate_password(self, value):
         if value.isalnum():
@@ -33,3 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+    def get_banks(self, obj):
+            bank_query = BankCard.objects.filter(user_id=obj.id)
+            serializer = BankSerializer(bank_query, many=True)
+    
+            return serializer.data
