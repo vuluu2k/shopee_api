@@ -1,7 +1,8 @@
 from django.db import models
 from uuid import uuid4
 from users.models import User
-
+from categories.models import Category
+from shops.models import Shop
 # Create your models here.
 class Product(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid4)
@@ -13,6 +14,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 class Variation(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid4)
@@ -22,11 +24,12 @@ class Variation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+
 
 class Feedback(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid4) 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variation = models.ForeignKey(Variation, on_delete=models.CASCADE)
     star = models.IntegerField(default=5)
     like = models.IntegerField(default=0)
     attachment = models.TextField(default="")
@@ -34,3 +37,5 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="feedbacks")
+    variation = models.ForeignKey(Variation, on_delete=models.CASCADE)
