@@ -9,9 +9,3 @@ class ShopViewSet(viewsets.ModelViewSet):
 
     queryset = Shop.objects.all().order_by('-created_at')
     serializer_class = ShopSerializer
-
-class ShopDetailViewSet(viewsets.ModelViewSet):
-    permission_classes=[permissions.AllowAny]
-
-    queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
