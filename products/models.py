@@ -6,14 +6,14 @@ from users.models import User
 from categories.models import Category
 from shops.models import Shop
 class Product(models.Model):
-    id = models.UUIDField(primary_key = True, default = uuid4)
+    id = models.UUIDField(primary_key = True, default = uuid4, editable=False)
     name = models.CharField(max_length=255, default="")
     thumbnails = models.TextField()
     price = models.FloatField(default=0)
     quantity_sold = models.IntegerField(default=0)
     attribute = models.JSONField()
     description = models.TextField(default="")
-    slug = models.SlugField(unique=True, default="")
+    slug = models.SlugField(unique=True, default="", editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,6 +29,9 @@ class Variation(models.Model):
     thumbnail = models.TextField()
     price = models.FloatField(default=0)
     remain_quantity = models.IntegerField(default=0)
+    retail_price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    origin_price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    wholesale_price = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
