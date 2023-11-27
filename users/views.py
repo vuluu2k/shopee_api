@@ -10,24 +10,8 @@ class BankViewSet(viewsets.ModelViewSet):
 
     queryset = BankCard.objects.all()
     serializer_class = BankSerializer
-
-
-class BankDetailViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-
-    queryset = BankCard.objects.all()
-    serializer_class = BankSerializer
-
-
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     queryset = User.objects.all().order_by('-created_at')
-    serializer_class = UserSerializer
-
-
-class UserDetailViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-
-    queryset = User.objects.all()
     serializer_class = UserSerializer
