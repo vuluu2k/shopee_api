@@ -5,15 +5,6 @@ from django.db.models import Q
 
 from .models import Product
 from .serializers import GeneralProductSerializer, DetailProductSerializer
-from django_filters import rest_framework as filters
-
-
-class ProductFilter(filters.FilterSet):
-    name = filters.CharFilter(field_name="name", lookup_expr='icontains')
-
-    class Meta:
-        model = Product
-        fields = ['name', 'category']
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -23,9 +14,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = GeneralProductSerializer
     lookup_field = 'slug'
 
-    filter_backends = filters.DjangoFilterBackend
-    filterset_class = ProductFilter
-
     def get_serializer_class(self):
         if self.action == 'list':
             return GeneralProductSerializer
@@ -33,8 +21,9 @@ class ProductViewSet(viewsets.ModelViewSet):
             return DetailProductSerializer
         return GeneralProductSerializer
 
-    # def filter_queryset(self, queryset):
-    #     keyword = self.request.query_params.get('keyword')
-    #     if keyword:
-    #         queryset = queryset.filter(Q(name__icontains=keyword))
-    #     return super().filter_queryset(queryset)
+    def filter_queryset(self, queryset):
+        print(self.request.query_params)
+        keyword = self.request.query_params.get('keyword')
+        if keyword:
+            queryset = queryset.filter(Q(name__icontains=keyword))
+        return super().filter_queryset(queryset)
