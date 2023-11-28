@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'categories',
     'users',
     'shops',
+    'crawler',
     'rest_framework',
     'django_filters',
 ]
