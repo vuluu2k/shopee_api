@@ -8,7 +8,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
 class GeneralProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'thumbnails', 'category', 'slug']
+        fields = ['id', 'name', 'thumbnails', 'category', 'price', 'slug']
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}
