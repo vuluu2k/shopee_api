@@ -1,10 +1,17 @@
-from rest_framework.routers import DefaultRouter
 from django.urls import path
-from . import views
+from .views import UserViewSet, BankViewSet
 
-router = DefaultRouter()
-router.register(r'^list', views.UserViewSet, basename='users')
-router.register(r'^banks', views.BankViewSet, basename='banks')
-router.register(r'^jwt', views.MyApiView, basename='jwt-authentication')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('', UserViewSet.as_view({'get': 'list'})),
+    path('/<str:pk>', UserViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy'
+    })),
+    path('/bank', BankViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('/bank/<str:pk>', BankViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'delete': 'destroy'
+    })),
+]
