@@ -5,7 +5,7 @@ from uuid import uuid4
 GENDER_CHOICES = [(1, 'Male'),(2, 'Female'),(3, 'Other'),]
 
 class User(AbstractUser):
-    id = models.UUIDField(primary_key = True, default = uuid4)
+    id = models.UUIDField(primary_key = True, default = uuid4, editable=False)
     user_auth_id = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length= 200)
     gender = models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
