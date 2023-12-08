@@ -9,6 +9,10 @@ class BankSerializer(serializers.ModelSerializer):
         model = BankCard
         fields = '__all__'
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return super().create({**validated_data, 'user': user})
+
 
 class UserSerializer(serializers.ModelSerializer):
     banks = serializers.SerializerMethodField()
