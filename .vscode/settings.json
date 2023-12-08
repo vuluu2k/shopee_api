@@ -3,6 +3,7 @@
         "autocrement",
         "shopee",
         "simplejwt",
-        "viewsets"
+        "viewsets",
+        "yasg"
     ]
 }
