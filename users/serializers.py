@@ -1,11 +1,17 @@
-from .models import User, BankCard
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+
+from .models import User, BankCard
 
 
 class BankSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankCard
         fields = '__all__'
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return super().create({**validated_data, 'user': user})
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         if value.isalnum():
             raise serializers.ValidationError(
                 'password must have at least one special character.')
-        return value
+        return make_password(value)
 
     # def validate(self, data):
     #     if data['first_name'] == data['last_name']:
@@ -29,13 +35,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'email', 'avatar', 'banks']
+                  'last_name', 'email', 'avatar', 'password', 'banks', 'phone_number']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def get_banks(self, obj):
-            bank_query = BankCard.objects.filter(user_id=obj.id)
-            serializer = BankSerializer(bank_query, many=True)
-    
-            return serializer.data
+        bank_query = BankCard.objects.filter(user_id=obj.id)
+        serializer = BankSerializer(bank_query, many=True)
+
+        return serializer.data

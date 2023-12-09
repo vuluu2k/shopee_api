@@ -1,9 +1,19 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
+from .views import UserViewSet, BankViewSet
 
-from . import views
-
-router = DefaultRouter()
-router.register(r'^list', views.UserViewSet, basename='users')
-router.register(r'^banks', views.BankViewSet, basename='banks')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('', UserViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('/<str:pk>', UserViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    })),
+    path('/bank', BankViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('/bank/<str:pk>', BankViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    })),
+]
