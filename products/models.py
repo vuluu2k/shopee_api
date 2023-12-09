@@ -18,6 +18,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -50,3 +51,23 @@ class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="feedbacks")
     variation = models.ForeignKey(Variation, on_delete=models.CASCADE)
+
+
+STATUS_CHOICES = [(0, 'Pending'),(1, 'Shipping'),(2, 'Delivered'),(3, 'Cancel'),]
+class Order(models.Model):
+    id = models.UUIDField(primary_key = True, default = uuid4)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+ 
+class OrderDetail(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    variation = models.ForeignKey(Variation, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('order', 'variation',)
+
+
+
