@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return request.user and (obj.owner == request.user or request.user.is_superuser)
+        return request.user and (obj.id == request.user.id or request.user.is_superuser)
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
