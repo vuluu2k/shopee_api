@@ -13,7 +13,7 @@ class VariationSerializer(serializers.ModelSerializer):
 class GeneralProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'thumbnails', 'category', 'price', 'slug']
+        fields = ['id', 'name', 'image','images', 'category', 'price', 'slug', 'feedbacks' ]
         lookup_field = 'slug'
         extra_kwargs = {
             'url': {'lookup_field': 'slug'}

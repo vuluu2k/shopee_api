@@ -1,24 +1,45 @@
 from django.db import models
 from uuid import uuid4
 from django.utils.text import slugify
+from django.contrib.postgres.fields import ArrayField
 
 from users.models import User
 from categories.models import Category
 from shops.models import Shop
 class Product(models.Model):
-    id = models.UUIDField(primary_key = True, default = uuid4, editable=False)
-    name = models.CharField(max_length=255, default="")
-    thumbnails = models.TextField()
+    id = models.UUIDField(primary_key = True, default = uuid4)
+    name = models.CharField(max_length=255)
+    image = models.TextField()
+    images = ArrayField(models.CharField(max_length=500), default=list)
+    currency = models.CharField(max_length=255, default="VND")
+    stock = models.IntegerField(default=0)
+    status = models.IntegerField(default=1)
+    ctime = models.DateTimeField(auto_now_add=True)
+    sold = models.IntegerField(default=0)
+    historical_sold = models.IntegerField(default=0)
+    brand = models.CharField(max_length=255, default="")
     price = models.FloatField(default=0)
-    quantity_sold = models.IntegerField(default=0)
-    attribute = models.JSONField()
-    description = models.TextField(default="")
-    slug = models.SlugField(unique=True, default="", editable=False)
+    price_max = models.FloatField(default=0)
+    price_min = models.FloatField(default=0)
+    hidden_price_display = models.FloatField(blank=True, null=True, default="")
+    price_before_discount = models.FloatField(default=0)
+    discount = models.FloatField(default=0)
+    size_chart = models.TextField(default="")
+    is_category_failed = models.CharField(max_length=255, default="", null=True)
+    video_info_list = ArrayField(models.CharField(max_length=500), default=list)
+    item_type = models.IntegerField(default=0)
+    reference_item_id = models.CharField(max_length=255, default="", null=True)
+    transparent_background_image = models.TextField(default="", null=True)
+    is_adult = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+
+
+
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -26,7 +47,7 @@ class Product(models.Model):
 
 class Variation(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid4)
-    fields = models.JSONField()
+    tier_variation = models.JSONField()
     thumbnail = models.TextField()
     price = models.FloatField(default=0)
     remain_quantity = models.IntegerField(default=0)
@@ -36,8 +57,8 @@ class Variation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variations")
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    
 
 
 class Feedback(models.Model):
