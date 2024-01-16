@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -16,15 +17,17 @@ from datetime import timedelta
 
 class CategoryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
-    
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
     def filter_queryset(self, queryset):
         category_id = self.request.query_params.get('id')
         if category_id:
-            queryset = queryset.filter(Q(parent__id=category_id) | Q(id=category_id))
+            queryset = queryset.filter(
+                Q(parent__id=category_id) | Q(id=category_id))
         return super().filter_queryset(queryset)
+
 
 class ProductByCategoryViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
@@ -55,37 +58,41 @@ class ProductByCategoryViewset(viewsets.ModelViewSet):
             'sort_by', openapi.IN_QUERY, description="Sort By",
             type=openapi.TYPE_STRING
         ),
-        
+
     ])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
+
     def filter_queryset(self, queryset):
         category_id = self.request.query_params.get('id')
+        params = {}
         if category_id:
             parent_category = Category.objects.get(id=category_id)
-            all_child_categories = self.get_all_child_categories(parent_category)
-            all_categories = all_child_categories | Category.objects.filter(id=parent_category.id)
-            queryset = queryset.filter(category__in=all_categories)
+            all_child_categories = self.get_all_child_categories(
+                parent_category)
+            all_categories = all_child_categories | Category.objects.filter(
+                id=parent_category.id)
+            params['category__in'] = all_categories
 
         shop = self.request.query_params.get('shop')
         if shop:
-            queryset = queryset.filter(shop=shop)
+            params['shop'] = shop
 
-        price_order = self.request.query_params.get('price_order')
-        queryset = queryset.order_by(price_order)
+        # price_order = self.request.query_params.get('price_order')
+        # queryset = queryset.order_by(price_order)
 
-        sort_by = self.request.query_params.get('sort_by')
-        if sort_by == 'newest':
-            queryset = queryset.order_by('-created_at')
-        
-        if sort_by == 'best_seller':
-            one_month_ago = timezone.now() - timedelta(days=30)
-            queryset = queryset.annotate(
-            total_sold=Sum('variation__orderdetail__quantity', 
-                           filter=Q(variation__orderdetail__order__created_at__gte=one_month_ago,
-                                    variation__orderdetail__order__status=2))
-        ).order_by('-total_sold')
+        # sort_by = self.request.query_params.get('sort_by')
+        # if sort_by == 'newest':
+        #     queryset = queryset.order_by('-created_at')
+
+        # if sort_by == 'best_seller':
+        #     one_month_ago = timezone.now() - timedelta(days=30)
+        #     queryset = queryset.annotate(
+        #         total_sold=Sum('variation__orderdetail__quantity',
+        #                        filter=Q(variation__orderdetail__order__created_at__gte=one_month_ago,
+        #                                 variation__orderdetail__order__status=2))
+        #     ).order_by('-total_sold')
+
+        queryset = queryset.filter(**params)
 
         return super().filter_queryset(queryset)
-    
