@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Product, Feedback, Variation
+from django.db.models import Sum, Avg
+
+from .models import Product, Feedback, Variation, OrderDetail
 from users.models import User
 class VariationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +31,15 @@ class GeneralProductSerializer(serializers.ModelSerializer):
 class DetailProductSerializer(serializers.ModelSerializer):
     feedbacks = FeedbackSerializer(many=True, read_only=True)
     variations = VariationSerializer(many=True, read_only=True)
+    total_sold = serializers.SerializerMethodField()
+    average_rating = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = [f.name for f in Product._meta.get_fields()] + ['total_sold', 'average_rating']
+
+    def get_total_sold(self, obj):
+        return OrderDetail.objects.filter\
+            (variation__product=obj, order__status=2).aggregate(total=Sum('quantity'))['total']
+
+    def get_average_rating(self, obj):
+        return Feedback.objects.filter(product=obj).aggregate(average=Avg('star'))['average']
